@@ -24,5 +24,7 @@ This quickstart sample includes the code that is explained as part of [this docu
 2. Use the webpack serve command to build and run the app on a local server:
 `npx webpack serve --config webpack.config.js`
 3. Once the local server starts up, open your browser and navigate to http://localhost:8080/. You'll see the calling application:
-![Render of sample application](https://github.com/Azure-Samples/communication-services-javascript-quickstarts/blob/main/media/1-on-1-voice-calling.png)
+
+![Render of sample application](./VolumeControl.PNG)
+
 To make an 1:1 outgoing video call, first provide user access token to initiate the call agent, then provide a ACS user ID in the text field and clicking the Start Call button. When the callee answers the call, call will be connected and youll hear each other
