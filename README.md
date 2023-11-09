@@ -1,4 +1,3 @@
-# volumecontrol
 ---
 page_type: sample
 languages:
