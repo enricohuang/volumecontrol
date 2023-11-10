@@ -86,7 +86,7 @@ function setupAudio() {
 
   const callStateChangedHandler = async () => {
     if (call.state === "Connected") {
-        //await call.muteIncomingAudio();
+        window.call = call;
     }
     else if(call.state === "Disconnected") {
         hangUpButton.disabled = true;
@@ -95,6 +95,8 @@ function setupAudio() {
   };
   
   const remoteStateChangedHandler = async (rps) => {
+      await call.muteIncomingAudio();
+
       if (rps.added.length > 0) {
         const remoteAudioStream = rps.added[0]
         
