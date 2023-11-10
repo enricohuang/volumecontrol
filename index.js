@@ -12,8 +12,12 @@ const submitToken = document.getElementById("token-submit");
 const callButton = document.getElementById("call-button");
 const hangUpButton = document.getElementById("hang-up-button");
 const acceptCallButton = document.getElementById('accept-call-button');
+let audioCtx;
+let gainNode;
+let sourceNode;
 
 submitToken.addEventListener("click", async () => {
+    setupAudio();
   const callClient = new CallClient();
   const userTokenCredential = userToken.value;
     try {
@@ -38,10 +42,11 @@ submitToken.addEventListener("click", async () => {
     }
 })
 
-  const audioCtx = new AudioContext();
+function setupAudio() {
+  audioCtx = new AudioContext();
     
   // Create the node that controls the volume.
-  const gainNode = new GainNode(audioCtx);
+  gainNode = new GainNode(audioCtx);
 
   
   const volumeControl = document.querySelector('[data-action="volume"]');
@@ -67,7 +72,10 @@ submitToken.addEventListener("click", async () => {
     },
     false
   );
- 
+
+  gainNode.connect(panner).connect(audioCtx.destination);
+}
+
   callButton.addEventListener("click", () => {
   // start a call
   const userToCall = calleeInput.value;
@@ -78,6 +86,7 @@ submitToken.addEventListener("click", async () => {
 
   const callStateChangedHandler = async () => {
     if (call.state === "Connected") {
+        //await call.muteIncomingAudio();
     }
     else if(call.state === "Disconnected") {
         hangUpButton.disabled = true;
@@ -91,15 +100,16 @@ submitToken.addEventListener("click", async () => {
         
         const ms = await remoteAudioStream.getMediaStream();
         console.log("The remote Audio streams are", ms);
-        //const source = audioCtx.createMediaStreamSource(ms);
-        const source = new MediaStreamAudioSourceNode(audioCtx, {
+        if (sourceNode) {
+            sourceNode.disconnect();
+        }
+        sourceNode = new MediaStreamAudioSourceNode(audioCtx, {
             mediaStream: ms,
           });
        // connect the AudioBufferSourceNode to the gainNode
        // and the gainNode to the destination, so we can play the
        // music and adjust the volume using the mouse cursor
-       source.connect(gainNode).connect(panner).connect(audioCtx.destination);
-
+       sourceNode.connect(gainNode)
     }  
   };
 
